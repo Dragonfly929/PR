@@ -73,6 +73,7 @@ def parse_product_listing_page(page_content):
     return product_routes
 
 
+
 if __name__ == "__main__":
     pages_to_parse = ['/', '/about', '/products', '/product-listing']
 
