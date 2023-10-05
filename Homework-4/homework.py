@@ -61,6 +61,9 @@ def parse_product_page(page_content):
     return product_details
 
 
+
+
+
 def parse_product_listing_page(page_content):
     soup = BeautifulSoup(page_content, 'html.parser')
     product_routes = []
