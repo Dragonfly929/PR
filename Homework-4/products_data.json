@@ -1,0 +1,1 @@
+"HTTP/1.1 200\r\nContent-Type: text/html\r\n\r\n\n<!DOCTYPE html>\n<html>\n<head>\n    <title>Products</title>\n</head>\n<body>\n    <h1>Products</h1>\n        <ul>\n          <li>Product 1</li>\n          <li>Product 2</li>\n          <li>Product 3</li>\n        </ul>\n</body>\n</html>\n\r\n"
