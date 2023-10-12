@@ -2,29 +2,16 @@ import socket
 import threading
 import json
 import os
-import base64
 
 HOST = '127.0.0.1'
-PORT = 12345
+PORT = 8080
 
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client_socket.connect((HOST, PORT))
 
-if not os.path.exists("CLIENT_MEDIA"):
-    os.makedirs("CLIENT_MEDIA")
 
-
-def handle_downloaded_image(received_message):
-    image_name = received_message["payload"]["image_name"]
-
-    if image_name.startswith("The "):
-        print(image_name)
-    else:
-        image_data = received_message["payload"]["image_data"]
-        with open(f"CLIENT_MEDIA/{image_name}", "wb") as image_file:
-            image_file.write(base64.b64decode(image_data))
-        print(f"File {image_name} downloaded successfully.")
-
+name = input("Enter your name: ")
+room = input("Enter the room name: ")
 
 def receive_messages():
     while True:
@@ -33,49 +20,30 @@ def receive_messages():
             break
         received_message = json.loads(data.decode('utf-8'))
         message_type = received_message["type"]
+
         if message_type == "connect_ack":
             print(received_message["payload"]["message"])
         elif message_type == "message":
             sender = received_message["payload"]["sender"]
-            room = received_message["payload"]["room"]
+            received_room = received_message["payload"]["room"]
             message_text = received_message["payload"]["text"]
-            print(f"[{room}] {sender}: {message_text}")
+            print(f"[{received_room}] {sender}: {message_text}")
         elif message_type == "notification":
             notification_message = received_message["payload"]["message"]
             print(f"Notification: {notification_message}")
-        elif message_type == "downloaded_image":
-            handle_downloaded_image(received_message)
-
 
 def send_message():
+    global room
     while True:
-        message = input(
-            "Enter a message (or 'upload: <path to image file>', 'download: <image name>', or 'exit' to quit): ")
+        message = input("Enter a message or file command (e.g., 'upload: path/to/file.txt', 'download: file.txt', or 'exit' to quit): ")
         if message.lower() == 'exit':
             break
-        if message.startswith("upload: "):
-            image_path = message[8:]
-            if os.path.exists(image_path):
-                with open(image_path, "rb") as image_file:
-                    image_data = base64.b64encode(image_file.read()).decode('utf-8')
-                upload_data = {
-                    "type": "upload",
-                    "payload": {
-                        "image_name": os.path.basename(image_path),
-                        "image_data": image_data,
-                    }
-                }
-                client_socket.send(json.dumps(upload_data).encode('utf-8'))
-            else:
-                print(f"File {image_path} doesn't exist.")
+        elif message.startswith("upload: "):
+            file_path = message.split("upload: ")[1]
+            send_upload_command(file_path)
         elif message.startswith("download: "):
-            download_command = {
-                "type": "download",
-                "payload": {
-                    "image_name": message[10:],
-                }
-            }
-            client_socket.send(json.dumps(download_command).encode('utf-8'))
+            file_name = message.split("download: ")[1]
+            send_download_command(file_name)
         else:
             message_data = {
                 "type": "message",
@@ -87,25 +55,44 @@ def send_message():
             }
             client_socket.send(json.dumps(message_data).encode('utf-8'))
 
+def send_upload_command(file_path):
+    if os.path.exists(file_path):
+        upload_data = {
+            "type": "upload",
+            "payload": {
+                "path": file_path
+            }
+        }
+        client_socket.send(json.dumps(upload_data).encode('utf-8'))
+    else:
+        print(f"File '{file_path}' doesn't exist.")
 
-name = input("Enter your name: ")
-room = input("Enter the room name: ")
+def send_download_command(file_name):
+    download_data = {
+        "type": "download",
+        "payload": {
+            "filename": file_name
+        }
+    }
+    client_socket.send(json.dumps(download_data).encode('utf-8'))
+    file_data = client_socket.recv(1024)
 
-connect_data = {
-    "type": "connect",
-    "payload": {
-        "name": name,
-        "room": room,
-    },
-}
-client_socket.send(json.dumps(connect_data).encode('utf-8'))
+    if file_data.startswith(b'{"type":"notification"'):
+        notification = json.loads(file_data.decode('utf-8'))
+        print(notification["payload"]["message"])
+    else:
+        with open(file_name, 'wb') as file:
+            file.write(file_data)
+        print(f"Downloaded {file_name}")
+
+
+receive_thread = threading.Thread(target=receive_messages)
+receive_thread.daemon = True
+receive_thread.start()
 
 send_thread = threading.Thread(target=send_message)
 send_thread.daemon = True
 send_thread.start()
 
-receive_thread = threading.Thread(target=receive_messages)
-receive_thread.daemon = True
-receive_thread.start()
 
 send_thread.join()
