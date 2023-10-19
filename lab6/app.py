@@ -10,7 +10,11 @@ def create_app():
     app = Flask(__name__)
 
     # Configure SQLAlchemy to use SQLite
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///your_database.db'
+    #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///your_database.db'
+
+    # PostgresSql
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://myuser:mypassword@localhost:5432/mydb'
+
     db.init_app(app)
 
     ### swagger specific ###

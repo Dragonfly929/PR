@@ -6,7 +6,6 @@ from flask import jsonify
 from models.electro_scooter import ElectroScooter
 
 
-
 @app.route('/api/electro-scooters', methods=['GET'])
 def get_electro_scooters():
     # Query the database to retrieve all electro scooters
@@ -85,31 +84,6 @@ def get_electro_scooter_by_id(scooter_id):
         }), 200
     else:
         return jsonify({"error": "Electro Scooter not found"}), 404
-
-
-# @app.route('/api/electro-scooters/<int:scooter_id>', methods=['PUT'])
-# def update_electro_scooter(scooter_id):
-#     try:
-#         # Get the scooter to update from the database
-#         electro_scooter = ElectroScooter.query.get(scooter_id)
-#
-#         if electro_scooter is None:
-#             return jsonify({"error": "Electro Scooter not found"}), 404
-#
-#         # Get data from the request body in JSON format
-#         data = request.get_json()
-#
-#         # Update the scooter with the provided data (or keep the original values if not provided)
-#         electro_scooter.name = data.get('name', electro_scooter.name)
-#         electro_scooter.battery_level = data.get('battery_level', electro_scooter.battery_level)
-#
-#         db.session.commit()
-#
-#         return jsonify({"message": "Electro Scooter updated successfully"}), 200
-#
-#     except Exception as e:
-#         return jsonify({"error": "Invalid request data", "details": str(e)}), 400
-
 
 
 @app.route('/api/electro-scooters/<int:scooter_id>', methods=['PUT'])

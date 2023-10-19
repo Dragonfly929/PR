@@ -1,2 +1,5 @@
 flask~=3.0.0
 flasgger~=0.9.7.1
+psycopg2
+psycopg2-binary
+Flask-Migrate
