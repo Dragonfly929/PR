@@ -1,0 +1,110 @@
+swagger: '2.0'
+info:
+  title: Electro Scooters API
+  description: API for managing electro scooters
+  version: '1.0'
+
+paths:
+  /api/electro-scooters:
+    get:
+      summary: Get a list of electro scooters
+      responses:
+        200:
+          description: A list of electro scooters
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ElectroScooter'
+    post:
+      summary: Create a new electro scooter
+      parameters:
+        - name: name
+          in: formData
+          type: string
+          required: true
+          description: Name of the electro scooter
+        - name: battery_level
+          in: formData
+          type: number
+          required: true
+          description: Battery level of the electro scooter
+      responses:
+        201:
+          description: Electro Scooter created successfully
+        400:
+          description: Invalid request data
+
+  /api/electro-scooters/{scooter_id}:
+    get:
+      summary: Get an electro scooter by ID
+      parameters:
+        - name: scooter_id
+          in: path
+          type: integer
+          format: int64
+          required: true
+          description: ID of the electro scooter to retrieve
+      responses:
+        200:
+          description: Electro Scooter details
+          schema:
+            $ref: '#/definitions/ElectroScooter'
+        404:
+          description: Electro Scooter not found
+
+    put:
+      summary: Update an electro scooter by ID
+      parameters:
+        - name: scooter_id
+          in: path
+          type: integer
+          format: int64
+          required: true
+          description: ID of the electro scooter to update
+        - name: name
+          in: formData
+          type: string
+          description: Updated name of the electro scooter
+        - name: battery_level
+          in: formData
+          type: number
+          description: Updated battery level of the electro scooter
+      responses:
+        200:
+          description: Electro Scooter updated successfully
+        404:
+          description: Electro Scooter not found
+
+    delete:
+      summary: Delete an electro scooter by ID
+      parameters:
+        - name: scooter_id
+          in: path
+          type: integer
+          format: int64
+          required: true
+          description: ID of the electro scooter to delete
+        - name: X-Delete-Password
+          in: header
+          type: string
+          required: true
+          description: Deletion password
+      responses:
+        200:
+          description: Electro Scooter deleted successfully
+        401:
+          description: Incorrect password
+        404:
+          description: Electro Scooter not found
+
+definitions:
+  ElectroScooter:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      battery_level:
+        type: number
