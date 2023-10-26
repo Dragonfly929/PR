@@ -12,6 +12,7 @@ server_socket.bind((HOST, PORT))
 
 connected_clients = {}
 
+
 def broadcast_message(sender_socket, room, message):
     for client_socket, client_info in connected_clients.items():
         if client_info["room"] == room and client_socket != sender_socket:
@@ -25,6 +26,7 @@ def broadcast_message(sender_socket, room, message):
             }
             client_socket.send(json.dumps(message_data).encode('utf-8'))
 
+
 def broadcast_notification(room, message):
     for client_socket, client_info in connected_clients.items():
         if client_info["room"] == room:
@@ -33,6 +35,7 @@ def broadcast_notification(room, message):
                 "payload": {"message": message},
             }
             client_socket.send(json.dumps(notification_data).encode('utf-8'))
+
 
 def handle_file_upload(client_socket, image_name, image_data):
     try:
@@ -50,6 +53,7 @@ def handle_file_upload(client_socket, image_name, image_data):
 
     except Exception as e:
         print(f"Error handling image upload: {e}")
+
 
 def handle_file_download(client_socket, image_name):
     try:
@@ -78,6 +82,7 @@ def handle_file_download(client_socket, image_name):
 
     except Exception as e:
         print(f"Error handling file download: {e}")
+
 
 def handle_client(client_socket):
     try:
@@ -120,6 +125,7 @@ def handle_client(client_socket):
         if client_socket in connected_clients:
             del connected_clients[client_socket]
         client_socket.close()
+
 
 server_socket.listen(5)
 print(f"Server is listening on {HOST}:{PORT}")
