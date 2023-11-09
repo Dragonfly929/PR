@@ -2,7 +2,6 @@ import unittest
 from player import Player
 from factory import PlayerFactory
 
-
 class TestToProtobuf(unittest.TestCase):
     def test_to_protobuf_single_player(self):
         player = Player("Alpha", "alpha@gmail.com", "2000-04-04", 345, "Berserk")
@@ -26,7 +25,6 @@ class TestToProtobuf(unittest.TestCase):
         res = factory.to_protobuf(players)
 
         self.assertEqual(res, result, "To Protobuf: The test for multiple plauers failed")
-
 
 class TestFromProtobuf(unittest.TestCase):
     def test_from_protobuf_single_player(self):
