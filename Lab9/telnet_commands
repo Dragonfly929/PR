@@ -1,0 +1,28 @@
+telnet localhost 25
+HELO localhost
+MAIL FROM: <sender@example.com>
+RCPT TO: <receiver@example.com>
+DATA
+Subject: Test Email
+Hello, this is a test email.
+.
+QUIT
+
+// Telnet Example to List All Files on Server:
+telnet ftp.example.com 21
+USER username
+PASS password
+LIST
+QUIT
+
+// Telnet Example to Copy (Retrieve) a File from the Server:
+telnet ftp.example.com 21
+USER username
+PASS password
+RETR remote_file.txt
+QUIT
+
+// Telnet Example to Upload a File to the Server:
+telnet ftp.example.com 21
+USER username
+PASS password
