@@ -13,7 +13,7 @@ FTP_PASSWORD = 'yourusername'
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 465
 SENDER_EMAIL = 'xxx@gmail.com'
-SENDER_PASSWORD = 'oozf stem psoi vyjg'
+SENDER_PASSWORD = 'xxxx xxxx xxxx xxxx'
 
 
 def upload_file_ftp():
