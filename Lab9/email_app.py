@@ -12,7 +12,7 @@ FTP_USERNAME = 'yourusername'
 FTP_PASSWORD = 'yourusername'
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 465
-SENDER_EMAIL = 'zaica.maia3@gmail.com'
+SENDER_EMAIL = 'xxx@gmail.com'
 SENDER_PASSWORD = 'oozf stem psoi vyjg'
 
 
